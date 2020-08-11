@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import "semantic-ui-css/semantic.min.css";
 import App from "./app/layout/App.jsx";
 import "./app/layout/styles.css";
@@ -8,7 +9,12 @@ import * as serviceWorker from "./serviceWorker";
 const rootElement = document.getElementById("root");
 
 function render() {
-  ReactDOM.render(<App />, rootElement);
+  ReactDOM.render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    rootElement
+  );
 }
 
 if (module.hot) {

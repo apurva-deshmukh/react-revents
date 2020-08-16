@@ -9,12 +9,9 @@ import App from "./app/layout/App.jsx";
 import ScrollToTop from "./app/layout/ScrollToTop.jsx";
 import "./app/layout/styles.css";
 import { configureStore } from "./app/store/configureStore";
-import { loadEvents } from "./features/events/eventActions.js";
 import * as serviceWorker from "./serviceWorker";
 
 const store = configureStore();
-
-store.dispatch(loadEvents());
 
 const rootElement = document.getElementById("root");
 

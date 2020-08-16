@@ -1,13 +1,32 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Grid } from "semantic-ui-react";
+import {
+  dataFromSnapshot,
+  getEventFromFirestore,
+} from "../../../app/firestore/firestoreService";
+import { listenToEvents } from "../eventActions";
 import EventFilters from "./EventFilters";
 import EventList from "./EventList";
 import EventListItemPlaceholder from "./EventListItemPlaceholder";
 
 export default function EventDashboard() {
+  const dispatch = useDispatch();
   const { events } = useSelector((state) => state.event);
   const { loading } = useSelector((state) => state.async);
+
+  useEffect(() => {
+    const unsubscribe = getEventFromFirestore({
+      next: (snapshot) =>
+        dispatch(
+          listenToEvents(
+            snapshot.docs.map((docSnapshot) => dataFromSnapshot(docSnapshot))
+          )
+        ),
+      error: (error) => console.log(error),
+    });
+    return unsubscribe;
+  });
 
   return (
     <Grid>

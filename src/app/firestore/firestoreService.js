@@ -1,3 +1,4 @@
+import cuid from "cuid";
 import firebase from "../config/firebase";
 
 const db = firebase.firestore();
@@ -9,7 +10,6 @@ export function dataFromSnapshot(snapshot) {
   for (const prop in data) {
     if (data.hasOwnProperty(prop)) {
       if (data[prop] instanceof firebase.firestore.Timestamp) {
-        console.log("here");
         data[prop] = data[prop].toDate();
       }
     }
@@ -21,6 +21,27 @@ export function dataFromSnapshot(snapshot) {
   };
 }
 
-export function getEventFromFirestore(observer) {
-  return db.collection("events").onSnapshot(observer);
+export function listenToEventsFromFirestore() {
+  return db.collection("events").orderBy("date");
+}
+
+export function listenToEventFromFirestore(eventId) {
+  return db.collection("events").doc(eventId);
+}
+
+export function addEventToFirestore(event) {
+  return db.collection("events").add({
+    ...event,
+    hostedBy: "Diana",
+    hostPhotoURL: "https://randomuser.me/api/portraits/women/22.jpg",
+    attendees: firebase.firestore.FieldValue.arrayUnion({
+      id: cuid(),
+      displayName: "Diana",
+      photoURL: "https://randomuser.me/api/portraits/women/22.jpg",
+    }),
+  });
+}
+
+export function updateEventInFirestore(event) {
+  return db.collection("events").doc(event.id).update(event);
 }
